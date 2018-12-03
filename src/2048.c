@@ -15,7 +15,6 @@
 int num[16];
 int num_v[16];//comparation
 char direct;
-int check();
 int signal;
 int score;
 int express;
@@ -27,6 +26,7 @@ void to_down();
 void get_wait();
 void get_direct();
 void start();
+int newBlock();
 
 void cheat_x();
 // 여기까지
@@ -36,13 +36,9 @@ void color_printf(int x);
 void draw_canvas();
 void bakup();
 int compare();
-int check();
 
 int main()
 {
-	int k;
-	int j;
-	int new_block;
 	start();
 
 	get_direct();
@@ -196,9 +192,17 @@ void get_wait()
 
 	draw_canvas();
 	if (signal == 0) get_direct();
-	if (check() == 1) get_direct();
-	new_block = rand() % 16;
-	if (num[new_block] != 0) get_wait();
+
+	if (newBlock() == -1) {
+		get_direct();
+	}
+
+	else {
+		new_block = newBlock();
+	}
+
+	Sleep(100);
+
 	rnd(new_block);
 	get_direct();
 }
@@ -231,16 +235,21 @@ void get_direct()
 void start()
 {
 	int k;
+	int rn;
 	for (k = 0; k < 16; k++)//init void
 	{
 		num[k] = 0;
 	}
 	srand(time(NULL));
 	score = 0;
+	//처음 3개 랜덤
+
 	rnd(10);
-	rnd(11);//init
+	rnd(11);
 	rnd(14);
 	rnd(15);
+
+
 	for (k = 0; k < 16; k++)
 	{
 		num_v[k] = num[k];//bakup .old data
@@ -375,7 +384,7 @@ void draw_canvas()
 	printf("\n|      |      |      |      |\n");
 	printf("-----------------------------\n");
 	printf(">>> Score:   %d <<<\033[m\n", score);
-	if (check() == 1)
+	if (newBlock() == -1)
 	{
 		printf("\n\033[1;32mCan you make a forward move?\n");
 	}
@@ -401,12 +410,25 @@ int compare()
 	return 0;
 }
 
-int check()
-{
-	int k;
-	for (k = 0; k < 16; k++)
-	{
-		if (num[k] == 0) return 0;
+int newBlock() {
+	int new_block;
+	int blank[16];
+	int i;
+	int n = 0;
+
+	for (i = 0; i < 16; i++) {
+		if (num[i] == 0) {
+			blank[n] = i;
+			n++;
+		}
 	}
-	return 1;
+
+	if (n == 0) {
+		return -1;
+	}
+
+	i = rand() % n;
+	new_block = blank[i];
+
+	return new_block;
 }
