@@ -243,7 +243,8 @@ void start()
 	srand(time(NULL));
 	score = 0;
 	//처음 3개 랜덤
-
+	
+	rnd(10);
 	rnd(11);
 	rnd(14);
 	rnd(15);
