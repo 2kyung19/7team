@@ -195,10 +195,8 @@ void get_wait()
 	}
 
 	draw_canvas();
-	if (signal == 0) get_direct();
-
-	if (newBlock() == -1) {
-		get_direct();
+	if (signal == 0 || newBlock() == -1) {
+		return;
 	}
 
 	else {
@@ -208,7 +206,7 @@ void get_wait()
 	Sleep(100);
 
 	rnd(new_block);
-	get_direct();
+	return;
 }
 void get_direct()
 {
