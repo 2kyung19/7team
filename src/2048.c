@@ -229,17 +229,15 @@ void get_direct()
 
 	switch (direct) {
 			case 'h': case 'H':
-				goto to_left; break;
+				to_left(); break;
 			case 'j': case 'J':
-				goto to_down; break;
+				to_down(); break;
 			case 'k': case 'K':
-				goto to_up; break;
+				to_up(); break;
 			case 'l': case 'L':
-				goto to_right; break;
+				to_right(); break;
 			case 'r': case 'R':
-				goto start; break;
-			case 'X':
-				goto cheat_x; break;
+				start(); break;
 			case 'e': case 'E':
 				exit(0);
 			default: break;
@@ -271,29 +269,8 @@ void start()
 		}
 	 }
 }
-void cheat_x()
-{
-	num[0] = 16;
-	num[1] = 128;
-	num[2] = 1024;
-	num[3] = 4096;
-	num[4] = 0;
-	num[5] = 256;
-	num[6] = 0;
-	num[7] = 2048;
-	num[8] = 0;
-	num[9] = 0;
-	num[10] = 256;
-	num[11] = 128;
-	num[12] = 0;
-	num[13] = 0;
-	num[14] = 16;
-	num[15] = 256;
-	score = 67108864;
-	get_wait();
-	//quit_g:
-	//exit(1);
-}
+
+
 char get1char(void)
 {
 #ifdef _WIN32
@@ -353,16 +330,7 @@ void color_printf(int x)
 	do
 	{
 		if (num[express_row][express_column] == 0)
-int compare()
-OBOBOBOBOBOB{
-	int k;
-	int j;
-	for (k = 0;k < 4;k++) {
-		for (j = 0;j < 4;j++) {
-OBOBOB			if (num_v[k][j] != num[k][j]) return 1;
-	}
-	return 0;
-}			printf("      |", num[express_row][express_column]);
+			printf("      |", num[express_row][express_column]);
 		else if (num[express_row][express_column] == 2)
 			printf(" \033[m%4d\033[0;33m |", num[express_row][express_column]);
 		else if (num[express_row][express_column] == 4)
@@ -416,16 +384,7 @@ void draw_canvas()
 	printf("-----------------------------\n");
 	printf("|      |      |      |      |\n");
 	printf("|");
-int compare()
-OBOBOBOBOBOB{
-	int k;
-	int j;
-	for (k = 0;k < 4;k++) {
-OBOBOB		for (j = 0;j < 4;j++) {
-			if (num_v[k][j] != num[k][j]) return 1;
-	}
-	return 0;
-}	color_printf(4);
+	color_printf(4);
 	express_row++;
 	printf("\n|      |      |      |      |\n");
 	printf("-----------------------------\n");
@@ -457,13 +416,8 @@ void bakup()
 	for (k = 0;k < 4;k++) {
 		for (j = 0;j < 4;j++) {
 			num_v[k][j] = num[k][j];//bakup .old data
+			}
 		}
-	}
-}
-
-               if (num_v[k] != num[k]) return 1;
-        }
-        return 0;
 }
 
 int compare()
@@ -475,8 +429,8 @@ int compare()
 			if (num_v[k][j] != num[k][j]) return 1;
 	}
 	return 0;
+	}
 }
-
 int newBlock() {
 	int new_block;
 	int blank[16];
