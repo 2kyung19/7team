@@ -37,6 +37,10 @@ void draw_canvas();
 void bakup();
 int compare();
 
+//아래 두가지 함수는 다른 방법으로 고안에서 사용
+void removeB(int k);
+void sum(int k);
+
 int main()
 {
 	start();
@@ -431,4 +435,121 @@ int newBlock() {
 	new_block = blank[i];
 
 	return new_block;
+}
+
+//다른 방법으로 고안한 코드
+//빈 칸 지우기
+void removeB(int k) { 
+	int i;
+	int j;
+
+	if (direct == 'h' || direct == 'H' || direct == 68) { //왼쪽
+		for (i = k;i < k + 3;i++) { 
+			if (num[i] == 0) { //빈 칸이면
+				for (j = i + 1;j < k + 4;j++) {
+					if (num[j] != 0) { //빈 칸이 아닌 값을
+						num[i] = num[j]; //왼쪽으로
+						num[j] = 0; //옮긴 칸은 빈 칸으로 수정
+
+						break;
+					}
+				}
+			}
+		}
+	}
+	else if (direct == 'j' || direct == 'J' || direct == 66) { //아래
+		for (i = k;i > k - 12;i -= 4) {
+			if (num[i] == 0) { //빈 칸이면
+				for (j = i - 4;j >= k - 12;j -= 4) {
+					if (num[j] != 0) { //빈 칸이 아닌 값을
+						num[i] = num[j]; //아래쪽으로
+						num[j] = 0; //옮긴 칸은 빈 칸으로 수정
+
+						break;
+					}
+				}
+			}
+		}
+	}
+	else if (direct == 'k' || direct == 'K' || direct == 65) { //위
+		for (i = k;i < k + 9;i += 4) { 
+			if (num[i] == 0) { //빈 칸이면
+				for (j = i + 4;j <= k + 12;j += 4) {
+					if (num[j] != 0) { //빈 칸이 아닌 값을
+						num[i] = num[j]; //위쪽으로
+						num[j] = 0; //옮긴 칸은 빈 칸으로 수정
+
+						break;
+					}
+				}
+			}
+		}
+	}
+	else if (direct == 'l' || direct == 'L' || direct == 67) { //오른쪽
+		for (i = k;i > k - 3;i--) {
+			if (num[i] == 0) { //빈 칸이면
+				for (j = i - 1;j > k - 4;j--) {
+					if (num[j] != 0) { //빈 칸이 아닌 값을
+						num[i] = num[j]; //오른쪽으로
+						num[j] = 0; //옮긴 칸은 빈 칸으로 수정
+
+						break;
+					}
+				}
+			}
+		}
+	}
+}
+//진행 방향으로 더하기
+void sum(int k) { 
+	int i;
+
+	if (direct == 'h' || direct == 'H' || direct == 68) { //왼쪽
+		for (i = k;i < k + 3;i++) {
+			if (num[i] == 0) {} //빈 칸이면 실행 없음
+			else if (num[i] == num[i + 1]) { //오른쪽 칸과 같은 값이면
+				num[i] *= 2; //왼쪽으로 더하고
+				num[i + 1] = 0; //오른쪽은 빈 칸 처리
+
+				score += num[i]; //스코어 처리
+				i++; //빈 칸으로 만든 칸은 건너뛰기
+			}
+		}
+	}
+	else if (direct == 'j' || direct == 'J' || direct == 66) { //아래
+		for (i = k;i > k - 9;i -= 4) {
+			if (num[i] == 0) {} //빈 칸이면 실행 없음
+			else if (num[i] == num[i - 4]) { //위쪽 칸과 같은 값이면
+				num[i] *= 2; //아래쪽으로 더하고
+				num[i - 4] = 0; //위쪽은 빈 칸 처리
+
+				score += num[i]; //스코어 처리
+				i -= 4; //빈 칸으로 만든 칸은 건너뛰기
+			}
+		}
+	}
+	else if (direct == 'k' || direct == 'K' || direct == 65) { //위
+		for (i = k;i < k + 9;i += 4) {
+			if (num[i] == 0) {} //빈 칸이면 실행 없음
+			else if (num[i] == num[i + 4]) { //아래쪽 칸과 같은 값이면
+				num[i] *= 2; //위쪽으로 더하고
+				num[i + 4] = 0; //아래쪽은 빈 칸 처리
+
+				score += num[i]; //스코어 처리
+				i += 4; //빈 칸으로 만든 칸은 건너뛰기
+			}
+		}
+	}
+	else if (direct == 'l' || direct == 'L' || direct == 67) { //오른쪽
+		for (i = k;i > k - 3;i--) {
+			if (num[i] == 0) {} //빈 칸이면 실행 없음
+			else if (num[i] == num[i - 1]) { //왼쪽 칸과 같은 값이면
+				num[i] *= 2; //오른쪽으로 더하고
+				num[i - 1] = 0; //왼쪽은 빈 칸 처리
+
+				score += num[i]; //스코어 처리
+				i--; //빈 칸으로 만든 칸은 건너뛰기
+			}
+		}
+	}
 }
