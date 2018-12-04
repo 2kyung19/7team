@@ -52,32 +52,33 @@ void sum(int k);
 int main()
 {
 	start();
-
-	get_direct();
-
+	while (1)
+	{
+		get_direct();
+	}
 	return 0;
 }
 
 void to_right()
 {
 	int k, j;
-	for (k = 0; k <= 12; k += 4)
+	for (k = 0; k <= 4; k++)
 	{
-		for (j = k + 3; j >= k + 1; j--)
+		for (j = 3; j > 0; j--)
 		{
-			if (num[j] == 0)
+			if (num[k][j] == 0)
 			{
-				num[j] = num[j - 1];
-				num[j - 1] = 0;
+				num[k][j] = num[k][j - 1];
+				num[k][j - 1] = 0;
 			}
-			if (num[j] != 0)
+			else if (num[k][j] != 0)
 			{
-				if (num[j] == num[j - 1] && num[j] >0)
+				if (num[k][j] == num[k][j - 1] && num[k][j] >0)
 				{
-					num[j] = num[j] * 2;
-					score = score + num[j];
-					num[j - 1] = 0;
-					num[j] = num[j] * -1; // 수정부분
+					num[k][j] = num[k][j] * 2;
+					score = score + num[k][j];
+					num[k][j - 1] = 0;
+					num[k][j] = num[k][j] * -1; // 수정부분
 				}
 			}
 		}
@@ -95,24 +96,24 @@ void to_right()
 void to_left()
 {
 	int k, j;
-	for (k = 0; k <= 12; k += 4)
+	for (k = 0; k <4; k++)
 	{
-		for (j = k; j <= k + 2; j++)
+		for (j = 0; j < 3; j++)
 		{
-			if (num[j] == 0)
+			if (num[k][j] == 0)
 			{
-				num[j] = num[j + 1];
-				num[j + 1] = 0;
+				num[k][j] = num[k][j + 1];
+				num[k][j + 1] = 0;
 			}
-			if (num[j] != 0)
+			else if (num[k][j] != 0)
 			{
-				if (num[j] == num[j + 1] && num[j] >0)
+				if (num[k][j] == num[k][j + 1] && num[k][j] >0)
 				{
-					num[j] = num[j] * 2;
-					score = score + num[j];
-					num[j + 1] = 0;
-					num[j] = num[j] * -1; // 수정부분
- 				}
+					num[k][j] = num[k][j] * 2;
+					score = score + num[k][j];
+					num[k][j + 1] = 0;
+					num[k][j] = num[k][j] * -1; // 수정부분
+				}
 			}
 		}
 	}
@@ -129,23 +130,23 @@ void to_left()
 void to_up()
 {
 	int k, j;
-	for (k = 0; k <= 3; k++) //첫번째 열부터 4번째까지
+	for (j = 0; j <4; j++) //첫번째 열부터 4번째까지
 	{
-		for (j = k; j <= 11; j += 4) // 해당 열의 첫번째 행부터 4번째 행까지
+		for (k = 0; k <3; k++) // 해당 열의 첫번째 행부터 4번째 행까지
 		{
-			if (num[j] == 0) // 블럭이 비어있다면 
+			if (num[k][j] == 0) // 블럭이 비어있다면 
 			{
-				num[j] = num[j + 4]; // 아래 블럭을 가져옴
-				num[j + 4] = 0;
+				num[k][j] = num[k + 1][j]; // 아래 블럭을 가져옴
+				num[k + 1][j] = 0;
 			}
-			if (num[j] != 0)
+			else if (num[k][j] != 0)
 			{
-				if (num[j] == num[j + 4] && num[j] >0) // 아래 블럭과 같다면
+				if (num[k][j] == num[k + 1][j] && num[k][j] >0) // 아래 블럭과 같다면
 				{
-					num[j] = num[j] * 2; // 아래 블럭과 지금 블럭을 합침
-					score = score + num[j];
-					num[j + 4] = 0;
-					num[j] = num[j] * -1; // 수정부분
+					num[k][j] = num[k][j] * 2; // 아래 블럭과 지금 블럭을 합침
+					score = score + num[k][j];
+					num[k + 1][j] = 0;
+					num[k][j] = num[k][j] * -1; // 수정부분
 				}
 			}
 		}
@@ -163,23 +164,23 @@ void to_up()
 void to_down()
 {
 	int k, j;
-	for (k = 12; k <= 15; k++) // 첫번째 열부터 4번째 열까지
+	for (j = 0; j < 4; j++) // 첫번째 열부터 4번째 열까지
 	{
-		for (j = k; j >= 4; j -= 4) // 해당 열의 마지막 행부터 첫번째 행까지
+		for (k = 3; k >0; k--) // 해당 열의 마지막 행부터 첫번째 행까지
 		{
-			if (num[j] == 0) // 블럭이 비어있다면
+			if (num[k][j] == 0) // 블럭이 비어있다면
 			{
-				num[j] = num[j - 4]; // 위 블럭을 가져옴
-				num[j - 4] = 0;
+				num[k][j] = num[k - 1][j]; // 위 블럭을 가져옴
+				num[k - 1][j] = 0;
 			}
-			if (num[j] != 0)
+			else if (num[k][j] != 0)
 			{
-				if (num[j] == num[j - 4] && num[j] >0) // 아래 블럭과 같다면
+				if (num[k][j] == num[k - 1][j] && num[k][j] >0) // 아래 블럭과 같다면
 				{
-					num[j] = num[j] * 2; // 아래 블럭과 지금 블럭을 합침
-					score = score + num[j];
-					num[j - 4] = 0;
-					num[j] = num[j] * -1;
+					num[k][j] = num[k][j] * 2; // 아래 블럭과 지금 블럭을 합침
+					score = score + num[k][j];
+					num[k - 1][j] = 0;
+					num[k][j] = num[k][j] * -1;
 				}
 			}
 		}
@@ -195,13 +196,13 @@ void to_down()
 }
 void get_wait()
 {
-	int j,k, new_block;
+	int j, k, new_block;
 	for (j = 0; j < 4; j++)
 	{
-		for(k=0;k<4;k++){
-		if (num[j][k] < 0)
-			num[j][k] *= -1;
-		}	
+		for (k = 0; k<4; k++) {
+			if (num[j][k] < 0)
+				num[j][k] *= -1;
+		}
 	}
 
 	draw_canvas();
@@ -221,79 +222,55 @@ void get_wait()
 void get_direct()
 {
 	draw_canvas();
-	
+
 	direct = get1char();
 
 	signal = 0;
 	bakup();
 
 	switch (direct) {
-			case 'h': case 'H':
-				goto to_left; break;
-			case 'j': case 'J':
-				goto to_down; break;
-			case 'k': case 'K':
-				goto to_up; break;
-			case 'l': case 'L':
-				goto to_right; break;
-			case 'r': case 'R':
-				goto start; break;
-			case 'X':
-				goto cheat_x; break;
-			case 'e': case 'E':
-				exit(0);
-			default: break;
+	case 'h': case 'H':
+		to_left(); break;
+	case 'j': case 'J':
+		to_down(); break;
+	case 'k': case 'K':
+		to_up(); break;
+	case 'l': case 'L':
+		to_right(); break;
+	case 'r': case 'R':
+		start(); break;
+	case 'e': case 'E':
+		exit(0);
+	default: break;
 	}
-	
-	get_direct();
+
 }
 void start()
 {
-	int k,j;
+	int k, j;
 	int rn;
-	for(j=0;j<4;j++){
-		for (k = 0; k < 4; k++){	
-		num[j][k] = 0;
+	for (j = 0; j<4; j++) {
+		for (k = 0; k < 4; k++) {
+			num[j][k] = 0;
 		}
 	}
 	srand(time(NULL));
 	score = 0;
 	//처음 3개 랜덤
-	
+
 	rnd(10);
 	rnd(11);
 	rnd(14);
 	rnd(15);
 
-	 for(j=0;j<4;j++){
-		for (k = 0; k < 4; k++){
+	for (j = 0; j<4; j++) {
+		for (k = 0; k < 4; k++) {
 			num_v[j][k] = num[j][k];//bakup .old data
 		}
-	 }
+	}
 }
-void cheat_x()
-{
-	num[0] = 16;
-	num[1] = 128;
-	num[2] = 1024;
-	num[3] = 4096;
-	num[4] = 0;
-	num[5] = 256;
-	num[6] = 0;
-	num[7] = 2048;
-	num[8] = 0;
-	num[9] = 0;
-	num[10] = 256;
-	num[11] = 128;
-	num[12] = 0;
-	num[13] = 0;
-	num[14] = 16;
-	num[15] = 256;
-	score = 67108864;
-	get_wait();
-	//quit_g:
-	//exit(1);
-}
+
+
 char get1char(void)
 {
 #ifdef _WIN32
@@ -310,21 +287,22 @@ char get1char(void)
 #endif
 	int ret = 0;
 	char c = -32;
+	int express = 0;
 #ifdef _WIN32
-	c = _getch();
+	c = getch();
 	if (c == -32)
 	{
-		c = _getch();
-		case Left: c = 'h'; break; 
-		case Down: c = 'j'; break; 
-		case Up: c = 'k'; break; 
-		case Right: c = 'l'; break; 
+		c = getch();
+		if (c == 75) c = 104;
+		if (c == 80) c = 106;
+		if (c == 72) c = 107;
+		if (c == 77) c = 108;
 	}
 #else 
 	//c = getchar();
 	putchar('\b');
 #endif
-	//printf("[%c]\n", c);
+	printf("[%c]\n", c);
 	//system("sleep 0.2");
 #ifdef _WIN32  
 	// Do nothing  
@@ -334,12 +312,13 @@ char get1char(void)
 	return c;
 }
 
+
 int rnd(int x)
 {
 	int judge;
-	int k,j;
-	k=x/4;
-	j=x%4;
+	int k, j;
+	k = x / 4;
+	j = x % 4;
 	judge = rand() % 10 + 1;
 	if (judge < 8) num[k][j] = 2;
 	if (judge >= 8) num[k][j] = 4;
@@ -349,20 +328,11 @@ int rnd(int x)
 
 void color_printf(int x)
 {
-	express_column=0;
+	express_column = 0;
 	do
 	{
 		if (num[express_row][express_column] == 0)
-int compare()
-OBOBOBOBOBOB{
-	int k;
-	int j;
-	for (k = 0;k < 4;k++) {
-		for (j = 0;j < 4;j++) {
-OBOBOB			if (num_v[k][j] != num[k][j]) return 1;
-	}
-	return 0;
-}			printf("      |", num[express_row][express_column]);
+			printf("      |", num[express_row][express_column]);
 		else if (num[express_row][express_column] == 2)
 			printf(" \033[m%4d\033[0;33m |", num[express_row][express_column]);
 		else if (num[express_row][express_column] == 4)
@@ -416,16 +386,7 @@ void draw_canvas()
 	printf("-----------------------------\n");
 	printf("|      |      |      |      |\n");
 	printf("|");
-int compare()
-OBOBOBOBOBOB{
-	int k;
-	int j;
-	for (k = 0;k < 4;k++) {
-OBOBOB		for (j = 0;j < 4;j++) {
-			if (num_v[k][j] != num[k][j]) return 1;
-	}
-	return 0;
-}	color_printf(4);
+	color_printf(4);
 	express_row++;
 	printf("\n|      |      |      |      |\n");
 	printf("-----------------------------\n");
@@ -454,39 +415,40 @@ void bakup()
 {
 	int k;
 	int j;
-	for (k = 0;k < 4;k++) {
-		for (j = 0;j < 4;j++) {
+	for (k = 0; k < 4; k++) {
+		for (j = 0; j < 4; j++) {
 			num_v[k][j] = num[k][j];//bakup .old data
 		}
 	}
-}
-
-               if (num_v[k] != num[k]) return 1;
-        }
-        return 0;
 }
 
 int compare()
 {
 	int k;
 	int j;
-	for (k = 0;k < 4;k++) {
-		for (j = 0;j < 4;j++) {
+	for (k = 0; k < 4; k++) {
+		for (j = 0; j < 4; j++) {
 			if (num_v[k][j] != num[k][j]) return 1;
+		}
+
 	}
 	return 0;
 }
 
+
+
 int newBlock() {
 	int new_block;
 	int blank[16];
-	int i;
+	int i, j;
 	int n = 0;
 
-	for (i = 0; i < 16; i++) {
-		if (num[i] == 0) {
-			blank[n] = i;
-			n++;
+	for (i = 0; i < 4; i++) {
+		for (j = 0; j < 4; j++) {
+			if (num[i][j] == 0) {
+				blank[n] = i * 4 + j;
+				n++;
+			}
 		}
 	}
 
@@ -500,16 +462,21 @@ int newBlock() {
 	return new_block;
 }
 
+
+
+
+/*
+
 //다른 방법으로 고안한 코드
 //빈 칸 지우기
-void removeB(int k) { 
+void removeB(int k) {
 	int i;
 	int j;
 
 	if (direct == 'h' || direct == 'H' || direct == 68) { //왼쪽
-		for (i = k;i < k + 3;i++) { 
+		for (i = k; i < k + 3; i++) {
 			if (num[i] == 0) { //빈 칸이면
-				for (j = i + 1;j < k + 4;j++) {
+				for (j = i + 1; j < k + 4; j++) {
 					if (num[j] != 0) { //빈 칸이 아닌 값을
 						num[i] = num[j]; //왼쪽으로
 						num[j] = 0; //옮긴 칸은 빈 칸으로 수정
@@ -521,9 +488,9 @@ void removeB(int k) {
 		}
 	}
 	else if (direct == 'j' || direct == 'J' || direct == 66) { //아래
-		for (i = k;i > k - 12;i -= 4) {
+		for (i = k; i > k - 12; i -= 4) {
 			if (num[i] == 0) { //빈 칸이면
-				for (j = i - 4;j >= k - 12;j -= 4) {
+				for (j = i - 4; j >= k - 12; j -= 4) {
 					if (num[j] != 0) { //빈 칸이 아닌 값을
 						num[i] = num[j]; //아래쪽으로
 						num[j] = 0; //옮긴 칸은 빈 칸으로 수정
@@ -535,9 +502,9 @@ void removeB(int k) {
 		}
 	}
 	else if (direct == 'k' || direct == 'K' || direct == 65) { //위
-		for (i = k;i < k + 9;i += 4) { 
+		for (i = k; i < k + 9; i += 4) {
 			if (num[i] == 0) { //빈 칸이면
-				for (j = i + 4;j <= k + 12;j += 4) {
+				for (j = i + 4; j <= k + 12; j += 4) {
 					if (num[j] != 0) { //빈 칸이 아닌 값을
 						num[i] = num[j]; //위쪽으로
 						num[j] = 0; //옮긴 칸은 빈 칸으로 수정
@@ -549,9 +516,9 @@ void removeB(int k) {
 		}
 	}
 	else if (direct == 'l' || direct == 'L' || direct == 67) { //오른쪽
-		for (i = k;i > k - 3;i--) {
+		for (i = k; i > k - 3; i--) {
 			if (num[i] == 0) { //빈 칸이면
-				for (j = i - 1;j > k - 4;j--) {
+				for (j = i - 1; j > k - 4; j--) {
 					if (num[j] != 0) { //빈 칸이 아닌 값을
 						num[i] = num[j]; //오른쪽으로
 						num[j] = 0; //옮긴 칸은 빈 칸으로 수정
@@ -563,12 +530,16 @@ void removeB(int k) {
 		}
 	}
 }
+
+
+
+
 //진행 방향으로 더하기
-void sum(int k) { 
+void sum(int k) {
 	int i;
 
 	if (direct == 'h' || direct == 'H' || direct == 68) { //왼쪽
-		for (i = k;i < k + 3;i++) {
+		for (i = k; i < k + 3; i++) {
 			if (num[i] == 0) {} //빈 칸이면 실행 없음
 			else if (num[i] == num[i + 1]) { //오른쪽 칸과 같은 값이면
 				num[i] *= 2; //왼쪽으로 더하고
@@ -580,7 +551,7 @@ void sum(int k) {
 		}
 	}
 	else if (direct == 'j' || direct == 'J' || direct == 66) { //아래
-		for (i = k;i > k - 9;i -= 4) {
+		for (i = k; i > k - 9; i -= 4) {
 			if (num[i] == 0) {} //빈 칸이면 실행 없음
 			else if (num[i] == num[i - 4]) { //위쪽 칸과 같은 값이면
 				num[i] *= 2; //아래쪽으로 더하고
@@ -592,7 +563,7 @@ void sum(int k) {
 		}
 	}
 	else if (direct == 'k' || direct == 'K' || direct == 65) { //위
-		for (i = k;i < k + 9;i += 4) {
+		for (i = k; i < k + 9; i += 4) {
 			if (num[i] == 0) {} //빈 칸이면 실행 없음
 			else if (num[i] == num[i + 4]) { //아래쪽 칸과 같은 값이면
 				num[i] *= 2; //위쪽으로 더하고
@@ -604,7 +575,7 @@ void sum(int k) {
 		}
 	}
 	else if (direct == 'l' || direct == 'L' || direct == 67) { //오른쪽
-		for (i = k;i > k - 3;i--) {
+		for (i = k; i > k - 3; i--) {
 			if (num[i] == 0) {} //빈 칸이면 실행 없음
 			else if (num[i] == num[i - 1]) { //왼쪽 칸과 같은 값이면
 				num[i] *= 2; //오른쪽으로 더하고
@@ -616,4 +587,7 @@ void sum(int k) {
 		}
 	}
 }
-//TEST_GIWON
+
+*/
+
+// error
