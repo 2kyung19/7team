@@ -12,12 +12,20 @@
 #include <unistd.h>
 #endif
 
-int num[16];
-int num_v[16];//comparation
+#define Left 75
+#define Right 77
+#define Up 72
+#define Down 80
+
+int num[4][4];
+int num_v[4][4];//comparation
 char direct;
 int signal;
 int score;
-int express;
+int express_row;
+int express_column;
+
+
 // goto 문을 함수로 작성
 void to_right();
 void to_left();
@@ -104,7 +112,7 @@ void to_left()
 					score = score + num[j];
 					num[j + 1] = 0;
 					num[j] = num[j] * -1; // 수정부분
-				}
+ 				}
 			}
 		}
 	}
@@ -187,11 +195,13 @@ void to_down()
 }
 void get_wait()
 {
-	int j, new_block;
-	for (j = 0; j < 16; j++)
+	int j,k, new_block;
+	for (j = 0; j < 4; j++)
 	{
-		if (num[j] < 0)
-			num[j] *= -1;
+		for(k=0;k<4;k++){
+		if (num[j][k] < 0)
+			num[j][k] *= -1;
+		}	
 	}
 
 	draw_canvas();
@@ -212,37 +222,41 @@ void get_wait()
 }
 void get_direct()
 {
-	//system("clear");//clear screen
 	draw_canvas();
-	//system("stty -icanon");
-	//direct = get1char();
+	
+	direct = get1char();
 
-	scanf_s("%c", &direct); //수정한 내용
-	getchar();
-
-	//printf("%c",direct);
 	signal = 0;
 	bakup();
-	if (direct == 'h' || direct == 'H' || direct == 68) to_left();
-	else if (direct == 'j' || direct == 'J' || direct == 66) to_down();
-	else if (direct == 'k' || direct == 'K' || direct == 65) to_up();
-	else if (direct == 'l' || direct == 'L' || direct == 67) to_right();
-	else if (direct == 'r' || direct == 'R') start();
-	else if (direct == 'X') cheat_x();
-	else if (direct == 'e' || direct == 'E')
-	{
-		//system("clear");
-		exit(1);
+
+	switch (direct) {
+			case 'h': case 'H':
+				goto to_left; break;
+			case 'j': case 'J':
+				goto to_down; break;
+			case 'k': case 'K':
+				goto to_up; break;
+			case 'l': case 'L':
+				goto to_right; break;
+			case 'r': case 'R':
+				goto start; break;
+			case 'X':
+				goto cheat_x; break;
+			case 'e': case 'E':
+				exit(0);
+			default: break;
 	}
+	
 	get_direct();
 }
 void start()
 {
-	int k;
+	int k,j;
 	int rn;
-	for (k = 0; k < 16; k++)//init void
-	{
-		num[k] = 0;
+	for(j=0;j<4;j++){
+		for (k = 0; k < 4; k++){	
+		num[j][k] = 0;
+		}
 	}
 	srand(time(NULL));
 	score = 0;
@@ -253,11 +267,11 @@ void start()
 	rnd(14);
 	rnd(15);
 
-
-	for (k = 0; k < 16; k++)
-	{
-		num_v[k] = num[k];//bakup .old data
-	}
+	 for(j=0;j<4;j++){
+		for (k = 0; k < 4; k++){
+			num_v[j][k] = num[j][k];//bakup .old data
+		}
+	 }
 }
 void cheat_x()
 {
@@ -298,22 +312,21 @@ char get1char(void)
 #endif
 	int ret = 0;
 	char c = -32;
-	int express = 0;
 #ifdef _WIN32
-	//c = getch();
+	c = _getch();
 	if (c == -32)
 	{
-		//c = getch();
-		if (c == 75) c = 104;
-		if (c == 80) c = 106;
-		if (c == 72) c = 107;
-		if (c == 77) c = 108;
+		c = _getch();
+		case Left: c = 'h'; break; 
+		case Down: c = 'j'; break; 
+		case Up: c = 'k'; break; 
+		case Right: c = 'l'; break; 
 	}
 #else 
 	//c = getchar();
 	putchar('\b');
 #endif
-	printf("[%c]\n", c);
+	//printf("[%c]\n", c);
 	//system("sleep 0.2");
 #ifdef _WIN32  
 	// Do nothing  
@@ -326,31 +339,60 @@ char get1char(void)
 int rnd(int x)
 {
 	int judge;
+	int k,j;
+	k=x/4;
+	j=x%4;
 	judge = rand() % 10 + 1;
-	if (judge < 8) num[x] = 2;
-	if (judge >= 8) num[x] = 4;
+	if (judge < 8) num[k][j] = 2;
+	if (judge >= 8) num[k][j] = 4;
 	return 0;
 }
 
+
 void color_printf(int x)
 {
+	express_column=0;
 	do
 	{
-		if (num[express] == 2) printf(" \033[m%4d\033[0;33m |", num[express]);
-		if (num[express] == 4) printf(" \033[0;32;32m%4d\033[0;33m |", num[express]);
-		if (num[express] == 8) printf(" \033[1;32m%4d\033[0;33m |", num[express]);
-		if (num[express] == 16) printf(" \033[0;32;34m%4d\033[0;33m |", num[express]);
-		if (num[express] == 32) printf(" \033[0;35m%4d\033[0;33m |", num[express]);
-		if (num[express] == 64) printf(" \033[1;35m%4d\033[0;33m |", num[express]);
-		if (num[express] == 128) printf(" \033[0;32;31m%4d\033[0;33m |", num[express]);
-		if (num[express] == 256) printf(" \033[1;31m%4d\033[0;33m |", num[express]);
-		if (num[express] == 512) printf(" \033[0;33m%4d\033[0;33m |", num[express]);
-		if (num[express] == 1024) printf(" \033[1;30m%4d\033[0;33m |", num[express]);
-		if (num[express] == 2048) printf(" \033[0;37m%4d\033[0;33m |", num[express]);
-		if (num[express] == 4096) printf(" \033[1;34m%4d\033[0;33m |", num[express]);
-		if (num[express] == 0) printf("      |", num[express]);
-		express++;
-	} while (express < x);
+		if (num[express_row][express_column] == 0)
+int compare()
+OBOBOBOBOBOB{
+	int k;
+	int j;
+	for (k = 0;k < 4;k++) {
+		for (j = 0;j < 4;j++) {
+OBOBOB			if (num_v[k][j] != num[k][j]) return 1;
+	}
+	return 0;
+}			printf("      |", num[express_row][express_column]);
+		else if (num[express_row][express_column] == 2)
+			printf(" \033[m%4d\033[0;33m |", num[express_row][express_column]);
+		else if (num[express_row][express_column] == 4)
+			printf(" \033[0;32;32m%4d\033[0;33m |", num[express_row][express_column]);
+		else if (num[express_row][express_column] == 8)
+			printf(" \033[1;32m%4d\033[0;33m |", num[express_row][express_column]);
+		else if (num[express_row][express_column] == 16)
+			printf(" \033[0;32;34m%4d\033[0;33m |", num[express_row][express_column]);
+		else if (num[express_row][express_column] == 32)
+			printf(" \033[0;35m%4d\033[0;33m |", num[express_row][express_column]);
+		else if (num[express_row][express_column] == 64)
+			printf(" \033[1;35m%4d\033[0;33m |", num[express_row][express_column]);
+		else if (num[express_row][express_column] == 128)
+			printf(" \033[0;32;31m%4d\033[0;33m |", num[express_row][express_column]);
+		else if (num[express_row][express_column] == 256)
+			printf(" \033[1;31m%4d\033[0;33m |", num[express_row][express_column]);
+		else if (num[express_row][express_column] == 512)
+			printf(" \033[0;33m%4d\033[0;33m |", num[express_row][express_column]);
+		else if (num[express_row][express_column] == 1024)
+			printf(" \033[1;30m%4d\033[0;33m |", num[express_row][express_column]);
+		else if (num[express_row][express_column] == 2048)
+			printf(" \033[0;37m%4d\033[0;33m |", num[express_row][express_column]);
+		else if (num[express_row][express_column] == 4096)
+			printf(" \033[1;34m%4d\033[0;33m |", num[express_row][express_column]);
+		else printf(" \033[1;34m%4d\033[0;33m |", num[express_row][express_column]);
+
+		express_column++;
+	} while (express_column < x);
 }
 
 void draw_canvas()
@@ -360,7 +402,8 @@ void draw_canvas()
 #else
 	system("clear");//clear screen
 #endif
-	express = 0;
+	express_row = 0;
+	express_column = 0;
 	printf("\033[m");
 	printf("2048 CLI V7\n");
 	printf("Built by Coder-BTS\n\n");
@@ -370,21 +413,34 @@ void draw_canvas()
 	printf("|      |      |      |      |\n");
 	printf("|");
 	color_printf(4);
+	express_row++;
 	printf("\n|      |      |      |      |\n");
 	printf("-----------------------------\n");
 	printf("|      |      |      |      |\n");
 	printf("|");
-	color_printf(8);
+int compare()
+OBOBOBOBOBOB{
+	int k;
+	int j;
+	for (k = 0;k < 4;k++) {
+OBOBOB		for (j = 0;j < 4;j++) {
+			if (num_v[k][j] != num[k][j]) return 1;
+	}
+	return 0;
+}	color_printf(4);
+	express_row++;
 	printf("\n|      |      |      |      |\n");
 	printf("-----------------------------\n");
 	printf("|      |      |      |      |\n");
 	printf("|");
-	color_printf(12);
+	color_printf(4);
+	express_row++;
 	printf("\n|      |      |      |      |\n");
 	printf("-----------------------------\n");
 	printf("|      |      |      |      |\n");
 	printf("|");
-	color_printf(16);
+	color_printf(4);
+	express_row++;
 	printf("\n|      |      |      |      |\n");
 	printf("-----------------------------\n");
 	printf(">>> Score:   %d <<<\033[m\n", score);
@@ -395,21 +451,30 @@ void draw_canvas()
 	printf("\033[m");
 }
 
+
 void bakup()
 {
 	int k;
-	for (k = 0; k < 16; k++)
-	{
-		num_v[k] = num[k];//bakup .old data
+	int j;
+	for (k = 0;k < 4;k++) {
+		for (j = 0;j < 4;j++) {
+			num_v[k][j] = num[k][j];//bakup .old data
+		}
 	}
+}
+
+               if (num_v[k] != num[k]) return 1;
+        }
+        return 0;
 }
 
 int compare()
 {
 	int k;
-	for (k = 0; k < 16; k++)
-	{
-		if (num_v[k] != num[k]) return 1;
+	int j;
+	for (k = 0;k < 4;k++) {
+		for (j = 0;j < 4;j++) {
+			if (num_v[k][j] != num[k][j]) return 1;
 	}
 	return 0;
 }
@@ -553,3 +618,4 @@ void sum(int k) {
 		}
 	}
 }
+//TEST_GIWON
