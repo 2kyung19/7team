@@ -418,13 +418,8 @@ void bakup()
 	for (k = 0;k < 4;k++) {
 		for (j = 0;j < 4;j++) {
 			num_v[k][j] = num[k][j];//bakup .old data
+			}
 		}
-	}
-}
-
-               if (num_v[k] != num[k]) return 1;
-        }
-        return 0;
 }
 
 int compare()
@@ -436,8 +431,8 @@ int compare()
 			if (num_v[k][j] != num[k][j]) return 1;
 	}
 	return 0;
+	}
 }
-
 int newBlock() {
 	int new_block;
 	int blank[16];
